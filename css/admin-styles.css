@@ -1,0 +1,64 @@
+/* admin-styles.css - Estilos personalizados para el panel de administración */
+
+.hidden {
+    display: none;
+  }
+  
+  .active-section {
+    display: block;
+  }
+  
+  #content-container {
+    padding: 20px;
+  }
+  
+  /* Estilos para el indicador de carga */
+  .progress {
+    margin: 20px 0;
+  }
+  
+  /* Estilos para el menú lateral */
+  .side-nav .user-view {
+    padding: 16px 16px 0;
+  }
+  
+  .side-nav li>a {
+    padding: 0 16px;
+  }
+  
+  /* Estilos para el contenido dinámico */
+  #dynamic-content h2 {
+    color: #3f51b5;
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  #dynamic-content h4 {
+    color: #58cef1;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+  
+  /* Ajustes para el breadcrumb */
+  .breadcrumb {
+    font-size: 1rem;
+  }
+  
+  /* Estilos para el timestamp */
+  #timestamp {
+    color: white;
+    font-size: 0.9rem;
+  }
+  /* Ajustar el margen izquierdo del contenido principal */
+#content-container {
+    margin-left: 250px; /* Ajusta este valor según necesites */
+    padding: 20px;
+    transition: margin-left 0.3s; /* Para animación suave */
+  }
+  
+  /* Ajuste para pantallas pequeñas */
+  @media only screen and (max-width: 992px) {
+    #content-container {
+      margin-left: 0;
+    }
+  }
