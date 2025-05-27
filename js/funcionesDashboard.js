@@ -1,13 +1,36 @@
 document.addEventListener("DOMContentLoaded", () => {
-    loadDashboardData();
+    cargarDatosDashboard();
 
-    // Refresh button
+    // Botón de actualización
     document.querySelector("#refreshDashboard").addEventListener("click", () => {
-        loadDashboardData();
+        cargarDatosDashboard();
     });
 
-    // Initialize Top Products Table
-    const grid = new gridjs.Grid({
+    // Filtrar ingresos por rango de fechas
+    document.querySelector("#filtrarIngresos").addEventListener("click", () => {
+        const fechaInicio = document.querySelector("#fechaInicio").value;
+        const fechaFin = document.querySelector("#fechaFin").value;
+        const periodo = document.querySelector("#periodoIngresos").value;
+        if (fechaInicio && fechaFin) {
+            cargarDatosDashboard(`fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&periodo=${periodo}`);
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Advertencia',
+                text: 'Por favor selecciona ambas fechas.'
+            });
+        }
+    });
+
+    // Colores para gráficas
+    const chartColors = [
+        '#008080', '#FFC107', '#28A745', '#DC3545', '#6F42C1', 
+        '#FD7E14', '#6610F2', '#E83E8C', '#17A2B8', '#343A40', 
+        '#FF6F61', '#6B7280'
+    ];
+
+    // Inicializar Tablas
+    const tablaProductosMasVendidos = new gridjs.Grid({
         columns: [
             { name: 'Producto', width: '30%' },
             { name: 'Categoría', width: '20%' },
@@ -20,129 +43,332 @@ document.addEventListener("DOMContentLoaded", () => {
         sort: true,
         resizable: true,
         server: {
-            url: "../controladores/controladorDash.php?ope=topProducts",
-            then: (data) => data.results.map((product) => [
-                product.nombre_producto,
-                product.nombre_categoria,
-                product.total_sales,
-                `$${product.total_revenue.toFixed(2)}`,
-                product.stock
-            ])
+            url: "../controladores/controladorDash.php?ope=productosMasVendidos",
+            then: (data) => data.resultados.map((producto) => [
+                producto.nombre_producto || 'N/A',
+                producto.nombre_categoria || 'N/A',
+                producto.total_ventas || 0,
+                `$${producto.ingresos_totales ? producto.ingresos_totales.toFixed(2) : '0.00'}`,
+                producto.stock || 0
+            ]),
+            handle: (res) => res.json()
         },
         language: {
             search: { placeholder: '🔎 Escribe para buscar...' },
-            pagination: {
-                previous: '⬅️',
-                next: '➡️',
-                navigate: (page, pages) => `Página ${page} de ${pages}`,
-                showing: '😁 Mostrando del',
-                of: 'de',
-                to: 'al',
-                results: 'registros'
-            },
-            loading: 'Cargando...',
-            noRecordsFound: 'Sin coincidencias encontradas.',
-            error: 'Ocurrió un error al obtener los datos.'
+            pagination: { previous: '⬅️', next: '➡️', navigate: (page, pages) => `Página ${page} de ${pages}` },
+            loading: 'Cargando...', noRecordsFound: 'Sin coincidencias encontradas.', error: 'Error al obtener datos.'
         }
-    }).render(document.querySelector("#topProductsTable"));
+    }).render(document.querySelector("#productosMasVendidosTable"));
 
-    // Initialize Charts
-    let ordersByStatusChart = null;
-    let revenueOverTimeChart = null;
+    const tablaClientesPrincipales = new gridjs.Grid({
+        columns: [
+            { name: 'Cliente', width: '40%' },
+            { name: 'Pedidos', width: '20%' },
+            { name: 'Gasto Total', width: '20%' },
+            { name: 'Ciudad', width: '20%' }
+        ],
+        pagination: true,
+        search: true,
+        sort: true,
+        resizable: true,
+        server: {
+            url: "../controladores/controladorDash.php?ope=clientesPrincipales",
+            then: (data) => data.resultados.map((cliente) => [
+                `${cliente.nombre || 'N/A'} ${cliente.ap_paterno || ''}`,
+                cliente.total_pedidos || 0,
+                `$${cliente.gasto_total ? cliente.gasto_total.toFixed(2) : '0.00'}`,
+                cliente.ciudad || 'N/A'
+            ]),
+            handle: (res) => res.json()
+        },
+        language: {
+            search: { placeholder: '🔎 Escribe para buscar...' },
+            pagination: { previous: '⬅️', next: '➡️', navigate: (page, pages) => `Página ${page} de ${pages}` },
+            loading: 'Cargando...', noRecordsFound: 'Sin coincidencias encontradas.', error: 'Error al obtener datos.'
+        }
+    }).render(document.querySelector("#clientesPrincipalesTable"));
 
-    function loadDashboardData() {
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', '../controladores/controladorDash.php?ope=dashboardData', true);
-        xhr.responseType = 'json';
-        xhr.onload = function () {
-            if (xhr.status === 200 && xhr.response.success) {
-                const data = xhr.response.data;
+    const tablaAlertasStockBajo = new gridjs.Grid({
+        columns: [
+            { name: 'Producto', width: '40%' },
+            { name: 'Categoría', width: '25%' },
+            { name: 'Stock', width: '15%' },
+            { name: 'Precio', width: '20%' }
+        ],
+        pagination: true,
+        search: true,
+        sort: true,
+        resizable: true,
+        server: {
+            url: "../controladores/controladorDash.php?ope=alertasStockBajo",
+            then: (data) => data.resultados.map((producto) => [
+                producto.nombre_producto || 'N/A',
+                producto.nombre_categoria || 'N/A',
+                producto.stock || 0,
+                `$${producto.precio ? producto.precio.toFixed(2) : '0.00'}`
+            ]),
+            handle: (res) => res.json()
+        },
+        language: {
+            search: { placeholder: '🔎 Escribe para buscar...' },
+            pagination: { previous: '⬅️', next: '➡️', navigate: (page, pages) => `Página ${page} de ${pages}` },
+            loading: 'Cargando...', noRecordsFound: 'Sin coincidencias encontradas.', error: 'Error al obtener datos.'
+        }
+    }).render(document.querySelector("#alertasStockBajoTable"));
 
-                // Update Metrics
-                document.querySelector("#totalOrders").textContent = data.totalOrders;
-                document.querySelector("#totalRevenue").textContent = `$${data.totalRevenue.toFixed(2)}`;
-                document.querySelector("#pendingOrders").textContent = data.pendingOrders;
-                document.querySelector("#activeDelivery").textContent = data.activeDelivery;
+    // Inicializar Gráficas
+    let pedidosPorEstadoChart = null;
+    let ingresosChart = null;
+    let zonasEntregaPopularesChart = null;
+    let ventasPorCategoriaChart = null;
+    let clientesPrincipalesChart = null;
+    let productosMasVendidosChart = null;
+    let productosMenosVendidosChart = null;
 
-                // Update Pie Chart (Orders by Status)
-                if (ordersByStatusChart) ordersByStatusChart.destroy();
-                ordersByStatusChart = new Chart(document.getElementById('ordersByStatusChart'), {
-                    type: 'pie',
-                    data: {
-                        labels: ['Pendiente', 'Enviado', 'Entregado', 'Cancelado'],
-                        datasets: [{
-                            data: [
-                                data.ordersByStatus.pendiente,
-                                data.ordersByStatus.enviado,
-                                data.ordersByStatus.entregado,
-                                data.ordersByStatus.cancelado
-                            ],
-                            backgroundColor: [
-                                'rgba(255, 193, 7, 0.7)',  // Warning
-                                'rgba(40, 167, 69, 0.7)',  // Success
-                                'rgba(80, 130, 180, 0.7)', // Accent
-                                'rgba(220, 53, 69, 0.7)'   // Danger
-                            ],
-                            borderColor: [
-                                'rgba(255, 193, 7, 1)',
-                                'rgba(40, 167, 69, 1)',
-                                'rgba(80, 130, 180, 1)',
-                                'rgba(220, 53, 69, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: { font: { size: 12 } }
-                            }
+    function cargarDatosDashboard(queryParams = '') {
+        const url = queryParams 
+            ? `../controladores/controladorDash.php?ope=datosDashboard&${queryParams}`
+            : '../controladores/controladorDash.php?ope=datosDashboard';
+        
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const datos = data.datos;
+
+                    // Actualizar Métricas
+                    document.querySelector("#totalPedidos").textContent = datos.totalPedidos;
+                    document.querySelector("#ingresosTotales").textContent = `$${datos.ingresosTotales.toFixed(2)}`;
+                    document.querySelector("#pedidosPendientes").textContent = datos.pedidosPendientes;
+                    document.querySelector("#repartidoresActivos").textContent = datos.repartidoresActivos;
+                    document.querySelector("#tiempoPromedioEntrega").textContent = `${datos.tiempoPromedioEntrega} min`;
+                    document.querySelector("#tasaEntregasATiempo").textContent = `${datos.tasaEntregasATiempo}%`;
+
+                    // Actualizar Gráficas
+                    if (pedidosPorEstadoChart) pedidosPorEstadoChart.destroy();
+                    pedidosPorEstadoChart = new Chart(document.getElementById('pedidosPorEstadoChart'), {
+                        type: 'pie', 
+                        data: { 
+                            labels: ['Pendiente', 'Enviado', 'Entregado', 'Cancelado'], 
+                            datasets: [{ 
+                                data: [
+                                    datos.pedidosPorEstado.pendiente, 
+                                    datos.pedidosPorEstado.enviado, 
+                                    datos.pedidosPorEstado.entregado, 
+                                    datos.pedidosPorEstado.cancelado
+                                ], 
+                                backgroundColor: chartColors.slice(0, 4), 
+                                borderColor: chartColors.slice(0, 4), 
+                                borderWidth: 1 
+                            }] 
+                        }, 
+                        options: { 
+                            responsive: true, 
+                            plugins: { legend: { position: 'bottom' } } 
+                        }
+                    });
+
+                    if (ingresosChart) ingresosChart.destroy();
+                    const periodo = document.querySelector("#periodoIngresos").value;
+                    let labels, ingresosData, xAxisTitle;
+                    if (periodo === 'dia') {
+                        labels = datos.ingresosPorDia.map(item => item.fecha);
+                        ingresosData = datos.ingresosPorDia.map(item => item.ingresos);
+                        xAxisTitle = 'Fecha';
+                    } else if (periodo === 'mes') {
+                        labels = datos.ingresosPorMes.map(item => item.mes);
+                        ingresosData = datos.ingresosPorMes.map(item => item.ingresos);
+                        xAxisTitle = 'Mes';
+                    } else {
+                        labels = datos.ingresosPorAnio.map(item => item.anio);
+                        ingresosData = datos.ingresosPorAnio.map(item => item.ingresos);
+                        xAxisTitle = 'Año';
+                    }
+                    ingresosChart = new Chart(document.getElementById('ingresosChart'), {
+                        type: 'line', 
+                        data: { 
+                            labels: labels, 
+                            datasets: [{ 
+                                label: 'Ingresos ($)', 
+                                data: ingresosData, 
+                                borderColor: '#008080', 
+                                backgroundColor: 'rgba(0, 128, 128, 0.2)', 
+                                fill: true, 
+                                tension: 0.4 
+                            }] 
+                        }, 
+                        options: { 
+                            responsive: true, 
+                            scales: { 
+                                x: { title: { display: true, text: xAxisTitle } }, 
+                                y: { title: { display: true, text: 'Ingresos ($)' } } 
+                            } 
+                        }
+                    });
+
+                    if (zonasEntregaPopularesChart) zonasEntregaPopularesChart.destroy();
+                    // Asegurar que se muestren al menos 5 calles
+                    const zonasData = datos.zonasEntregaPopulares.slice(0, 5);
+                    if (zonasData.length < 5) {
+                        for (let i = zonasData.length; i < 5; i++) {
+                            zonasData.push({ calle: `Sin Datos ${i + 1}`, cantidad_pedidos: 0 });
                         }
                     }
-                });
-
-                // Update Line Chart (Revenue Over Time)
-                if (revenueOverTimeChart) revenueOverTimeChart.destroy();
-                revenueOverTimeChart = new Chart(document.getElementById('revenueOverTimeChart'), {
-                    type: 'line',
-                    data: {
-                        labels: data.revenueOverTime.map(item => item.date),
-                        datasets: [{
-                            label: 'Ingresos ($)',
-                            data: data.revenueOverTime.map(item => item.revenue),
-                            borderColor: 'rgba(136, 176, 219, 1)',
-                            backgroundColor: 'rgba(136, 176, 219, 0.2)',
-                            fill: true,
-                            tension: 0.4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                                labels: { font: { size: 12 } }
+                    zonasEntregaPopularesChart = new Chart(document.getElementById('zonasEntregaPopularesChart'), {
+                        type: 'bar', 
+                        data: { 
+                            labels: zonasData.map(item => item.calle), 
+                            datasets: [{ 
+                                label: 'Pedidos', 
+                                data: zonasData.map(item => item.cantidad_pedidos), 
+                                backgroundColor: chartColors.slice(0, 5), 
+                                borderColor: chartColors.slice(0, 5), 
+                                borderWidth: 1 
+                            }] 
+                        }, 
+                        options: { 
+                            responsive: true, 
+                            scales: { 
+                                x: { title: { display: true, text: 'Calle' } }, 
+                                y: { title: { display: true, text: 'Número de Pedidos' }, beginAtZero: true } 
+                            },
+                            plugins: {
+                                legend: { position: 'bottom' }
                             }
-                        },
-                        scales: {
-                            x: { title: { display: true, text: 'Fecha' } },
-                            y: { title: { display: true, text: 'Ingresos ($)' } }
                         }
-                    }
-                });
+                    });
 
-                // Refresh Table
-                grid.forceRender();
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: xhr.response?.message || 'No se pudo cargar el dashboard'
-                });
-            }
-        };
-        xhr.send();
+                    if (ventasPorCategoriaChart) ventasPorCategoriaChart.destroy();
+                    ventasPorCategoriaChart = new Chart(document.getElementById('ventasPorCategoriaChart'), {
+                        type: 'doughnut', 
+                        data: { 
+                            labels: datos.ventasPorCategoria.map(item => item.nombre_categoria), 
+                            datasets: [{ 
+                                data: datos.ventasPorCategoria.map(item => item.total_ventas), 
+                                backgroundColor: chartColors.slice(0, datos.ventasPorCategoria.length), 
+                                borderColor: chartColors.slice(0, datos.ventasPorCategoria.length), 
+                                borderWidth: 1 
+                            }] 
+                        }, 
+                        options: { 
+                            responsive: true, 
+                            plugins: { legend: { position: 'bottom' } } 
+                        }
+                    });
+
+                    if (clientesPrincipalesChart) clientesPrincipalesChart.destroy();
+                    clientesPrincipalesChart = new Chart(document.getElementById('clientesPrincipalesChart'), {
+                        type: 'pie', 
+                        data: { 
+                            labels: datos.clientesPrincipales.map(item => `${item.nombre} ${item.ap_paterno}`), 
+                            datasets: [{ 
+                                data: datos.clientesPrincipales.map(item => item.total_pedidos), 
+                                backgroundColor: chartColors.slice(0, datos.clientesPrincipales.length), 
+                                borderColor: chartColors.slice(0, datos.clientesPrincipales.length), 
+                                borderWidth: 1 
+                            }] 
+                        }, 
+                        options: { 
+                            responsive: true, 
+                            plugins: { legend: { position: 'bottom' } } 
+                        }
+                    });
+
+                    if (productosMasVendidosChart) productosMasVendidosChart.destroy();
+                    productosMasVendidosChart = new Chart(document.getElementById('productosMasVendidosChart'), {
+                        type: 'bar', 
+                        data: { 
+                            labels: datos.productosMasVendidos.map(item => item.nombre_producto), 
+                            datasets: [{ 
+                                label: 'Ventas', 
+                                data: datos.productosMasVendidos.map(item => item.total_ventas), 
+                                backgroundColor: chartColors.slice(0, datos.productosMasVendidos.length), 
+                                borderColor: chartColors.slice(0, datos.productosMasVendidos.length), 
+                                borderWidth: 1 
+                            }] 
+                        }, 
+                        options: { 
+                            responsive: true, 
+                            scales: { 
+                                x: { title: { display: true, text: 'Producto' } }, 
+                                y: { title: { display: true, text: 'Ventas' } } 
+                            } 
+                        }
+                    });
+
+                    if (productosMenosVendidosChart) productosMenosVendidosChart.destroy();
+                    productosMenosVendidosChart = new Chart(document.getElementById('productosMenosVendidosChart'), {
+                        type: 'bar', 
+                        data: { 
+                            labels: datos.productosMenosVendidos.map(item => item.nombre_producto), 
+                            datasets: [{ 
+                                label: 'Ventas', 
+                                data: datos.productosMenosVendidos.map(item => item.total_ventas), 
+                                backgroundColor: chartColors.slice(0, datos.productosMenosVendidos.length), 
+                                borderColor: chartColors.slice(0, datos.productosMenosVendidos.length), 
+                                borderWidth: 1 
+                            }] 
+                        }, 
+                        options: { 
+                            responsive: true, 
+                            scales: { 
+                                x: { title: { display: true, text: 'Producto' } }, 
+                                y: { title: { display: true, text: 'Ventas' } } 
+                            } 
+                        }
+                    });
+
+                    // Actualizar Tablas
+                    tablaProductosMasVendidos.forceRender();
+                    tablaClientesPrincipales.forceRender();
+                    tablaAlertasStockBajo.forceRender();
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Error', text: data.mensaje || 'No se pudo cargar el dashboard' });
+                }
+            })
+            .catch(error => Swal.fire({ icon: 'error', title: 'Error', text: 'Error en la solicitud: ' + error }));
     }
+
+    // Funciones de Exportación
+    window.exportTableToExcel = (tableId, filename) => {
+        const table = document.querySelector(`#${tableId} .gridjs-table`);
+        const rows = table.querySelectorAll('tr');
+        const data = [];
+        
+        rows.forEach(row => {
+            const rowData = [];
+            row.querySelectorAll('th, td').forEach(cell => rowData.push(cell.innerText));
+            data.push(rowData);
+        });
+
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+        XLSX.writeFile(wb, `${filename}.xlsx`);
+    };
+
+    window.exportTableToPDF = (tableId, title) => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const table = document.querySelector(`#${tableId} .gridjs-table`);
+        const rows = table.querySelectorAll('tr');
+        const data = [];
+
+        rows.forEach(row => {
+            const rowData = [];
+            row.querySelectorAll('th, td').forEach(cell => rowData.push(cell.innerText));
+            data.push(rowData);
+        });
+
+        doc.setFontSize(16);
+        doc.text(title, 14, 20);
+        doc.autoTable({
+            head: [data[0]],
+            body: data.slice(1),
+            startY: 30,
+            theme: 'grid',
+            headStyles: { fillColor: [0, 128, 128] },
+        });
+        doc.save(`${title.replace(/\s+/g, '_')}.pdf`);
+    };
 });

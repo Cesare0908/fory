@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
+<head> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedidos - FORY</title>
@@ -12,8 +12,7 @@
     <!-- Menú lateral -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h4><a href="
-http://localhost/fory-final/php/ModuloCliente/cliente.php" class="text-white text-decoration-none">FORY</a></h4>
+            <h4><a href="http://localhost/fory-final/php/ModuloCliente/cliente.php" class="text-white text-decoration-none">FORY</a></h4>
             <button class="btn-close btn-warning" id="cerrar-sidebar" aria-label="Cerrar menú">X</button>
         </div>
         <ul class="nav flex-column">
@@ -34,8 +33,7 @@ http://localhost/fory-final/php/ModuloCliente/cliente.php" class="text-white tex
         <div class="container d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center">
                 <button class="btn btn-light me-2" id="abrir-sidebar"><i class="fas fa-bars"></i></button>
-                <span class="h4 mb-0"><a href="
-http://localhost/fory-final/php/ModuloCliente/cliente.php" class="text-white text-decoration-none">FORY</a></span>
+                <span class="h4 mb-0"><a href="http://localhost/fory-final/php/ModuloCliente/cliente.php" class="text-white text-decoration-none">FORY</a></span>
             </div>
             <div class="input-group w-25">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
@@ -261,12 +259,6 @@ http://localhost/fory-final/php/ModuloCliente/cliente.php" class="text-white tex
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="http://localhost/fory-final/js/FuncionesCliente/pedidos.js?v=9"></script>
+    <script src="../../js/FuncionesCliente/pedidos.js?v=13"></script>
 </body>
 </html>
-
-
-
-
-
-

@@ -7,9 +7,13 @@ if (isset($_GET['ope'])) {
     $ope = $_GET['ope'];
     $conexion = dbConectar();
 
-    // Obtener rango de fechas de los parámetros GET
-    $fechaInicio = isset($_GET['fechaInicio']) ? $_GET['fechaInicio'] : date('Y-m-d', strtotime('-7 days'));
-    $fechaFin = isset($_GET['fechaFin']) ? $_GET['fechaFin'] : date('Y-m-d');
+    // Validar y sanitizar fechas
+    $fechaInicio = isset($_GET['fechaInicio']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['fechaInicio'])
+        ? $_GET['fechaInicio']
+        : date('Y-m-d', strtotime('-7 days'));
+    $fechaFin = isset($_GET['fechaFin']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['fechaFin'])
+        ? $_GET['fechaFin']
+        : date('Y-m-d');
 
     // Datos principales del reporte
     if ($ope == "datosReporte") {
@@ -34,6 +38,7 @@ if (isset($_GET['ope'])) {
                 ];
             }
             $stmt->close();
+            error_log("Ventas por Categoría: " . json_encode($ventasPorCategoria));
 
             // Ventas por día
             $query = "SELECT DATE(ped.fecha_pedido) as date, SUM(dp.subtotal) as revenue
@@ -53,6 +58,7 @@ if (isset($_GET['ope'])) {
                 ];
             }
             $stmt->close();
+            error_log("Ventas por Día: " . json_encode($ventasPorDia));
 
             echo json_encode([
                 'success' => true,
@@ -62,6 +68,7 @@ if (isset($_GET['ope'])) {
                 ]
             ]);
         } catch (Exception $e) {
+            error_log("Error en datosReporte: " . $e->getMessage());
             echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
         }
     }
@@ -95,6 +102,7 @@ if (isset($_GET['ope'])) {
                 ];
             }
             $stmt->close();
+            error_log("Productos Más Vendidos: " . json_encode($products));
 
             echo json_encode([
                 'count' => count($products),
@@ -103,6 +111,7 @@ if (isset($_GET['ope'])) {
                 'results' => $products
             ]);
         } catch (Exception $e) {
+            error_log("Error en productosMasVendidos: " . $e->getMessage());
             echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
         }
     }
@@ -136,6 +145,7 @@ if (isset($_GET['ope'])) {
                 ];
             }
             $stmt->close();
+            error_log("Productos Menos Vendidos: " . json_encode($products));
 
             echo json_encode([
                 'count' => count($products),
@@ -144,6 +154,7 @@ if (isset($_GET['ope'])) {
                 'results' => $products
             ]);
         } catch (Exception $e) {
+            error_log("Error en productosMenosVendidos: " . $e->getMessage());
             echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
         }
     }

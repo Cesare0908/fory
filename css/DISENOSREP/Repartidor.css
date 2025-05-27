@@ -1,0 +1,302 @@
+/* Importar fuente Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+body {
+    background-image: url('https://i.ibb.co/Kpn1Nvqd/image-Photoroom.jpg');
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+.main-content {
+    margin-left: 0;
+    padding: 20px;
+    width: 100%;
+    transition: margin-left 0.3s ease;
+}
+
+.sidebar.active ~ .main-content {
+    margin-left: 250px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0, 87, 183, 0.9);
+    color: #FFFFFF;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.header-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.btn-hamburger {
+    background: none;
+    border: none;
+    color: #FFFFFF;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.disponibilidad {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.disponibilidad label {
+    font-weight: 500;
+    color: #FFFFFF;
+}
+
+.disponibilidad .form-control {
+    width: 150px;
+    padding: 8px;
+    font-size: 0.9rem;
+}
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: #003087;
+    color: #FFFFFF;
+    position: fixed;
+    top: 0;
+    left: -250px;
+    transition: left 0.3s ease;
+    z-index: 1000;
+}
+
+.sidebar.active {
+    left: 0;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-header .logo-font {
+    font-family: "Script MT";
+    font-size: 2rem;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    padding: 15px 20px;
+    transition: background 0.3s ease;
+}
+
+.sidebar-menu li:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-menu li a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.content {
+    background: rgba(179, 216, 255, 0.9);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.form-control {
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #CED4DA;
+    background: #FFFFFF;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #0057B7;
+    box-shadow: 0 0 6px rgba(0, 87, 183, 0.3);
+    outline: none;
+}
+
+.form-control::placeholder {
+    color: #6C757D;
+}
+
+.is-invalid {
+    border-color: #DC3545;
+    box-shadow: 0 0 6px rgba(220, 53, 69, 0.3);
+}
+
+.is-valid {
+    border-color: #28A745;
+}
+
+.invalid-feedback {
+    font-size: 0.85rem;
+    color: #DC3545;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.is-invalid ~ .invalid-feedback {
+    opacity: 1;
+}
+
+.btn {
+    border-radius: 8px;
+    padding: 10px 20px;
+    background: #0057B7;
+    border: none;
+    color: #FFFFFF;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+.btn:hover {
+    background: #003087;
+}
+
+.btn-danger {
+    background: #DC3545;
+}
+
+.btn-danger:hover {
+    background: #C82333;
+}
+
+.btn-success {
+    background: #28A745;
+}
+
+.btn-success:hover {
+    background: #218838;
+}
+
+.btn-secondary {
+    background: #6C757D;
+}
+
+.btn-secondary:hover {
+    background: #5A6268;
+}
+
+.card {
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card h5 {
+    font-weight: 700;
+    color: #181818;
+    margin-bottom: 15px;
+}
+
+.notification-item {
+    padding: 15px;
+    border-bottom: 1px solid #E9ECEF;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-item.unread {
+    background: rgba(0, 87, 183, 0.1);
+}
+
+#map-ubicacion {
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.perfil-vista p, .vehiculo-vista p {
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.perfil-vista p strong, .vehiculo-vista p strong {
+    color: #181818;
+    font-weight: 600;
+}
+
+.footer {
+    background: #003087;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 15px 0;
+    width: 100%;
+    font-size: 0.85rem;
+}
+
+.footer .footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.footer p {
+    margin: 5px 0;
+}
+
+.footer strong {
+    font-weight: 700;
+}
+
+@media (max-width: 767px) {
+    .main-content {
+        margin-left: 0;
+    }
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .disponibilidad {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .content {
+        padding: 20px;
+    }
+    .sidebar {
+        width: 200px;
+        left: -200px;
+    }
+    .sidebar.active {
+        left: 0;
+    }
+}

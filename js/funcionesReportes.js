@@ -1,6 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Fechas iniciales (últimos 7 días)
+    const fechaInicioInicial = moment().subtract(6, 'days').format('YYYY-MM-DD');
+    const fechaFinInicial = moment().format('YYYY-MM-DD');
+
     // Inicializar el selector de rango de fechas
     const rangoFechas = $('#rangoFechas').daterangepicker({
+        startDate: moment().subtract(6, 'days'),
+        endDate: moment(),
         opens: 'left',
         locale: {
             format: 'YYYY-MM-DD',
@@ -22,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         cargarDatosReporte(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
     });
 
-    // Inicializar tablas
+    // Inicializar tablas con fechas iniciales
     const tablaProductosMasVendidos = new gridjs.Grid({
         columns: [
             { name: 'Producto', width: '30%' },
@@ -36,14 +42,28 @@ document.addEventListener("DOMContentLoaded", () => {
         sort: true,
         resizable: true,
         server: {
-            url: "../controladores/controladorReportes.php?ope=productosMasVendidos",
-            then: (data) => data.results.map((product) => [
-                product.nombre_producto,
-                product.nombre_categoria,
-                product.total_sales,
-                `$${product.total_revenue.toFixed(2)}`,
-                product.stock
-            ])
+            url: `../controladores/controladorReportes.php?ope=productosMasVendidos&fechaInicio=${fechaInicioInicial}&fechaFin=${fechaFinInicial}`,
+            then: (data) => {
+                console.log("Respuesta productosMasVendidos:", data); // Depuración
+                if (!data || !data.results || !Array.isArray(data.results)) {
+                    console.error("Datos inválidos para productosMasVendidos:", data);
+                    return [];
+                }
+                return data.results.map((product) => [
+                    product.nombre_producto || 'N/A',
+                    product.nombre_categoria || 'N/A',
+                    product.total_sales || 0,
+                    `$${product.total_revenue ? product.total_revenue.toFixed(2) : '0.00'}`,
+                    product.stock || 0
+                ]);
+            },
+            handle: (res) => {
+                if (!res.ok) {
+                    console.error("Error en la respuesta del servidor:", res.status, res.statusText);
+                    throw new Error("Error al obtener datos de productos más vendidos");
+                }
+                return res.json();
+            }
         },
         language: {
             search: { placeholder: '🔎 Escribe para buscar...' },
@@ -75,14 +95,28 @@ document.addEventListener("DOMContentLoaded", () => {
         sort: true,
         resizable: true,
         server: {
-            url: "../controladores/controladorReportes.php?ope=productosMenosVendidos",
-            then: (data) => data.results.map((product) => [
-                product.nombre_producto,
-                product.nombre_categoria,
-                product.total_sales,
-                `$${product.total_revenue.toFixed(2)}`,
-                product.stock
-            ])
+            url: `../controladores/controladorReportes.php?ope=productosMenosVendidos&fechaInicio=${fechaInicioInicial}&fechaFin=${fechaFinInicial}`,
+            then: (data) => {
+                console.log("Respuesta productosMenosVendidos:", data); // Depuración
+                if (!data || !data.results || !Array.isArray(data.results)) {
+                    console.error("Datos inválidos para productosMenosVendidos:", data);
+                    return [];
+                }
+                return data.results.map((product) => [
+                    product.nombre_producto || 'N/A',
+                    product.nombre_categoria || 'N/A',
+                    product.total_sales || 0,
+                    `$${product.total_revenue ? product.total_revenue.toFixed(2) : '0.00'}`,
+                    product.stock || 0
+                ]);
+            },
+            handle: (res) => {
+                if (!res.ok) {
+                    console.error("Error en la respuesta del servidor:", res.status, res.statusText);
+                    throw new Error("Error al obtener datos de productos menos vendidos");
+                }
+                return res.json();
+            }
         },
         language: {
             search: { placeholder: '🔎 Escribe para buscar...' },
@@ -106,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let graficoVentasPorDia = null;
 
     // Cargar datos iniciales (últimos 7 días)
-    cargarDatosReporte(moment().subtract(6, 'days').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD'));
+    cargarDatosReporte(fechaInicioInicial, fechaFinInicial);
 
     // Botón de actualizar
     document.querySelector("#actualizarReporte").addEventListener("click", () => {
@@ -192,26 +226,54 @@ document.addEventListener("DOMContentLoaded", () => {
                 tablaProductosMasVendidos.updateConfig({
                     server: {
                         url: `../controladores/controladorReportes.php?ope=productosMasVendidos&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-                        then: (data) => data.results.map((product) => [
-                            product.nombre_producto,
-                            product.nombre_categoria,
-                            product.total_sales,
-                            `$${product.total_revenue.toFixed(2)}`,
-                            product.stock
-                        ])
+                        then: (data) => {
+                            console.log("Actualización productosMasVendidos:", data);
+                            if (!data || !data.results || !Array.isArray(data.results)) {
+                                console.error("Datos inválidos para productosMasVendidos:", data);
+                                return [];
+                            }
+                            return data.results.map((product) => [
+                                product.nombre_producto || 'N/A',
+                                product.nombre_categoria || 'N/A',
+                                product.total_sales || 0,
+                                `$${product.total_revenue ? product.total_revenue.toFixed(2) : '0.00'}`,
+                                product.stock || 0
+                            ]);
+                        },
+                        handle: (res) => {
+                            if (!res.ok) {
+                                console.error("Error en la respuesta del servidor:", res.status, res.statusText);
+                                throw new Error("Error al obtener datos de productos más vendidos");
+                            }
+                            return res.json();
+                        }
                     }
                 }).forceRender();
 
                 tablaProductosMenosVendidos.updateConfig({
                     server: {
                         url: `../controladores/controladorReportes.php?ope=productosMenosVendidos&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-                        then: (data) => data.results.map((product) => [
-                            product.nombre_producto,
-                            product.nombre_categoria,
-                            product.total_sales,
-                            `$${product.total_revenue.toFixed(2)}`,
-                            product.stock
-                        ])
+                        then: (data) => {
+                            console.log("Actualización productosMenosVendidos:", data);
+                            if (!data || !data.results || !Array.isArray(data.results)) {
+                                console.error("Datos inválidos para productosMenosVendidos:", data);
+                                return [];
+                            }
+                            return data.results.map((product) => [
+                                product.nombre_producto || 'N/A',
+                                product.nombre_categoria || 'N/A',
+                                product.total_sales || 0,
+                                `$${product.total_revenue ? product.total_revenue.toFixed(2) : '0.00'}`,
+                                product.stock || 0
+                            ]);
+                        },
+                        handle: (res) => {
+                            if (!res.ok) {
+                                console.error("Error en la respuesta del servidor:", res.status, res.statusText);
+                                throw new Error("Error al obtener datos de productos menos vendidos");
+                            }
+                            return res.json();
+                        }
                     }
                 }).forceRender();
             } else {

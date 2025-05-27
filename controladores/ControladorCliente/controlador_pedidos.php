@@ -1,12 +1,7 @@
 <?php
 require '../../php/config.php';
-session_start();
+session_start(); 
 
-// Simulación de usuario autenticado (ID: 29)
-if (!isset($_SESSION['id_usuario'])) {
-    $_SESSION['id_usuario'] = 29;
-    $_SESSION['nombre'] = "Cliente Prueba";
-}
 
 // Crear directorio para comprobantes si no existe
 $comprobantesDir = __DIR__ . '/../../comprobantes/';
@@ -73,7 +68,7 @@ if (isset($_GET['ope'])) {
                   AND p.stock > 0 AND p.disponibilidad = 'disponible'
                   GROUP BY p.id_producto
                   ORDER BY total_vendido DESC
-                  LIMIT 5";
+                  LIMIT 15";
         $result = $conexion->query($query);
 
         $productos = [];
@@ -374,7 +369,11 @@ if (isset($_POST['ope'])) {
             exit;
         }
         if ($id_establecimiento <= 0 || $id_direccion <= 0 || $id_metodo_pago <= 0) {
-            echo json_encode(["success" => 0, "mensaje" => "Datos incompletos"]);
+            $missing = [];
+            if ($id_establecimiento <= 0) $missing[] = "id_establecimiento";
+            if ($id_direccion <= 0) $missing[] = "id_direccion";
+            if ($id_metodo_pago <= 0) $missing[] = "id_metodo_pago";
+            echo json_encode(["success" => 0, "mensaje" => "Datos incompletos: " . implode(", ", $missing) . " faltantes o inválidos"]);
             exit;
         }
 
@@ -399,7 +398,6 @@ if (isset($_POST['ope'])) {
 
             // Manejo del comprobante de pago (para Transferencia)
             $comprobante_pago = null;
-            $estado_comprobante = 'pendiente';
             if ($id_metodo_pago == 2) { // Transferencia
                 if (!isset($_FILES['comprobante_pago']) || $_FILES['comprobante_pago']['error'] === UPLOAD_ERR_NO_FILE) {
                     throw new Exception("Debes subir un comprobante de pago para transferencias.");
@@ -461,20 +459,25 @@ if (isset($_POST['ope'])) {
             }
 
             // Insertar pago
-            $query_pago = "INSERT INTO pago (id_pedido, id_metodo_pago, monto, fecha_pago, estado, comprobante_pago, estado_comprobante, telefono_confirmacion) 
-                           VALUES (?, ?, ?, NOW(), 'pendiente', ?, ?, ?)";
+            $query_pago = "INSERT INTO pago (id_pedido, id_metodo_pago, monto, fecha_pago, estado, comprobante, telefono_confirmacion) 
+                           VALUES (?, ?, ?, NOW(), 'pendiente', ?, ?)";
             $stmt_pago = $conexion->prepare($query_pago);
-            $stmt_pago->bind_param("idssss", $id_pedido, $id_metodo_pago, $total, $comprobante_pago, $estado_comprobante, $telefono_confirmacion);
+            $stmt_pago->bind_param("iddss", $id_pedido, $id_metodo_pago, $total, $comprobante_pago, $telefono_confirmacion);
             $stmt_pago->execute();
 
             $conexion->commit();
             unset($_SESSION['carrito']);
-            echo json_encode(["success" => 1, "mensaje" => "Pedido realizado con éxito", "id_pedido" => $id_pedido]);
+            echo json_encode(["success" => 1, "mensaje" => "Pedido registrado correctamente", "id_pedido" => $id_pedido]);
         } catch (Exception $e) {
             $conexion->rollback();
             echo json_encode(["success" => 0, "mensaje" => $e->getMessage()]);
         }
 
+        $stmt->close();
+        if (isset($stmt_detalle)) $stmt_detalle->close();
+        if (isset($stmt_stock)) $stmt_stock->close();
+        if (isset($stmt_historial)) $stmt_historial->close();
+        if (isset($stmt_pago)) $stmt_pago->close();
         $conexion->close();
         exit;
 
@@ -485,24 +488,35 @@ if (isset($_POST['ope'])) {
         }
 
         $id_usuario = $_SESSION['id_usuario'];
-        $calle = $_POST['calle'];
-        $numero = $_POST['numero'];
-        $colonia = $_POST['colonia'];
-        $ciudad = $_POST['ciudad'];
-        $estado = $_POST['estado'];
-        $codigo_postal = $_POST['codigo_postal'];
-        $referencias = $_POST['referencias'];
+        $calle = trim($_POST['calle'] ?? '');
+        $numero = trim($_POST['numero'] ?? '');
+        $colonia = trim($_POST['colonia'] ?? '');
+        $ciudad = trim($_POST['ciudad'] ?? '');
+        $estado = trim($_POST['estado'] ?? '');
+        $codigo_postal = trim($_POST['codigo_postal'] ?? '');
+        $referencias = trim($_POST['referencias'] ?? '');
+
+        if (empty($calle) || empty($numero) || empty($colonia) || empty($ciudad) || empty($estado) || empty($codigo_postal)) {
+            echo json_encode(["success" => 0, "mensaje" => "Todos los campos obligatorios deben estar completos"]);
+            exit;
+        }
+
+        if (!preg_match('/^[0-9]{5}$/', $codigo_postal)) {
+            echo json_encode(["success" => 0, "mensaje" => "El código postal debe ser un número de 5 dígitos"]);
+            exit;
+        }
 
         $conexion = dbConectar();
         $query = "INSERT INTO direccion (id_usuario, calle, numero, colonia, ciudad, estado, codigo_postal, referencias) 
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conexion->prepare($query);
         $stmt->bind_param("isssssss", $id_usuario, $calle, $numero, $colonia, $ciudad, $estado, $codigo_postal, $referencias);
+        $stmt->execute();
 
-        if ($stmt->execute()) {
-            echo json_encode(["success" => 1, "mensaje" => "Dirección guardada con éxito"]);
+        if ($stmt->affected_rows > 0) {
+            echo json_encode(["success" => 1, "mensaje" => "Dirección guardada correctamente"]);
         } else {
-            echo json_encode(["success" => 0, "mensaje" => "Error al guardar la dirección: " . $conexion->error]);
+            echo json_encode(["success" => 0, "mensaje" => "Error al guardar la dirección"]);
         }
 
         $stmt->close();

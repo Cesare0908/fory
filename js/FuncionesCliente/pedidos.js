@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Cargar categorías
     fetch("../../controladores/ControladorCliente/controlador_pedidos.php?ope=listarCategorias")
         .then(response => response.json())
-        .then(data => {
+        .then(data => { 
             if (data.success) {
                 categoryCarousel.innerHTML = `
                     <button class="btn btn-outline-dark me-2 category-btn active" data-id="0"><i class="fas fa-th-large me-1"></i> Todas</button>
@@ -173,14 +173,31 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch("../../controladores/ControladorCliente/controlador_pedidos.php?ope=listarDirecciones")
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
+                if (data.success && data.direcciones.length > 0) {
                     data.direcciones.forEach(dir => {
                         const option = document.createElement("option");
                         option.value = dir.id_direccion;
                         option.textContent = `${dir.calle} ${dir.numero}, ${dir.colonia}, ${dir.ciudad}`;
                         direccionSelect.appendChild(option);
                     });
+                } else {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Sin direcciones",
+                        text: "No tienes direcciones registradas. Agrega una nueva dirección.",
+                    }).then(() => {
+                        bootstrap.Modal.getInstance(document.getElementById("modal-direccion")).hide();
+                        new bootstrap.Modal(document.getElementById("modal-nueva-direccion")).show();
+                    });
                 }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "No se pudieron cargar las direcciones. Intenta de nuevo.",
+                });
+                console.error("Error fetching direcciones:", error);
             });
     }
 
@@ -188,14 +205,28 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch("../../controladores/ControladorCliente/controlador_pedidos.php?ope=listarMetodosPago")
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
+            if (data.success && data.metodos.length > 0) {
                 data.metodos.forEach(met => {
                     const option = document.createElement("option");
                     option.value = met.id_metodo_pago;
                     option.textContent = met.nombre_metodo;
                     metodoPagoSelect.appendChild(option);
                 });
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "No se pudieron cargar los métodos de pago.",
+                });
             }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Error al cargar métodos de pago. Intenta de nuevo.",
+            });
+            console.error("Error fetching metodos pago:", error);
         });
 
     // Cargar productos
@@ -451,7 +482,10 @@ document.addEventListener("DOMContentLoaded", function () {
             confirmButtonText: "Continuar"
         }).then((result) => {
             if (result.isConfirmed) {
-                new bootstrap.Modal(document.getElementById("modal-direccion")).show();
+                cargarDirecciones(); // Refrescar direcciones
+                setTimeout(() => {
+                    new bootstrap.Modal(document.getElementById("modal-direccion")).show();
+                }, 500);
             }
         });
     });
@@ -464,8 +498,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Continuar a método de pago
     continuarPagoBtn.addEventListener("click", function () {
-        if (!direccionSelect.value) {
-            Swal.fire("Error", "Selecciona una dirección", "error");
+        if (!direccionSelect.value || direccionSelect.value === "") {
+            Swal.fire("Error", "Selecciona una dirección válida", "error");
             return;
         }
         bootstrap.Modal.getInstance(document.getElementById("modal-direccion")).hide();
@@ -532,11 +566,28 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         formPago.classList.add("was-validated");
 
-        if (!metodoPagoSelect.value) {
+        // Validar campos obligatorios
+        if (!metodoPagoSelect.value || metodoPagoSelect.value === "") {
             Swal.fire({
                 icon: "error",
                 title: "Error",
-                text: "Por favor selecciona un método de pago"
+                text: "Por favor selecciona un método de pago válido"
+            });
+            return;
+        }
+        if (!direccionSelect.value || direccionSelect.value === "") {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Por favor selecciona una dirección válida"
+            });
+            return;
+        }
+        if (!establecimientoInput.value || parseInt(establecimientoInput.value) <= 0) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "El establecimiento no es válido"
             });
             return;
         }
