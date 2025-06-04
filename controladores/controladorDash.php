@@ -3,7 +3,7 @@ require_once '../php/config.php';
 header('Content-Type: application/json');
 
 if (isset($_GET['ope'])) {
-    $ope = $_GET['ope'];
+    $ope = $_GET['ope']; 
     $conexion = dbConectar();
 
     if ($ope == "datosDashboard") {
@@ -42,7 +42,7 @@ if (isset($_GET['ope'])) {
             // Pedidos por Estado
             $query = "SELECT estado, COUNT(*) as conteo FROM pedido GROUP BY estado";
             $result = $conexion->query($query);
-            $pedidosPorEstado = ['pendiente' => 0, 'enviado' => 0, 'entregado' => 0, 'cancelado' => 0];
+            $pedidosPorEstado = ['pendiente' => 0, 'camino' => 0, 'proceso' => 0, 'entregado' => 0, 'cancelado' => 0];
             while ($row = $result->fetch_assoc()) {
                 $pedidosPorEstado[$row['estado']] = $row['conteo'];
             }
@@ -144,7 +144,7 @@ if (isset($_GET['ope'])) {
                 $productosMenosVendidos[] = ['nombre_producto' => $row['nombre_producto'], 'total_ventas' => intval($row['total_ventas'])];
             }
 
-            echo json_encode([
+            echo json_encode([ 
                 'success' => true,
                 'datos' => [
                     'totalPedidos' => $totalPedidos,

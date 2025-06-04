@@ -437,7 +437,7 @@ function validaImagen(campo, mensajeError) {
     }
 
     const file = campo.files[0];
-    const tiposPermitidos = ["image/jpeg", "image/png", "image/gif"];
+    const tiposPermitidos = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/jpg", "image/bmp", "image/avif"];
     if (!tiposPermitidos.includes(file.type)) {
         campo.classList.add("is-invalid");
         campo.classList.remove("is-valid");

@@ -17,7 +17,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="logo">
-                            <span class="logo-font">Fory</span>
+                            <span class="logo-font">Foryfay</span>
                         </div>
                     </div>
                 </div>

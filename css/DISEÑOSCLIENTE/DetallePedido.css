@@ -1,0 +1,43 @@
+body {
+    background-image: url('https://i.ibb.co/Kpn1Nvqd/image-Photoroom.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #333;
+}
+
+/* Encabezado */
+header {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.caja-detalles-pedido {
+    background: rgba(179, 216, 255, 0.9);
+    padding: 40px;
+    margin: 60px auto;
+    max-width: 800px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+}
+.tabla-detalles-pedido th, .tabla-detalles-pedido td {
+    padding: 12px;
+    text-align: left;
+}
+.tabla-detalles-pedido th {
+    background: #0057B7;
+    color: #FFFFFF;
+}
+.boton-cancelar {
+    background: #DC3545;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    color: #FFFFFF;
+    font-weight: 700;
+    transition: background 0.3s ease;
+}
+.boton-cancelar:hover {
+    background: #a12835;
+}

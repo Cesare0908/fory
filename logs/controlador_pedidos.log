@@ -1,0 +1,36 @@
+[2025-06-01 09:33:38] detallePedido - id_pedido: 205, id_usuario: 44
+[2025-06-01 09:33:38] detallePedido - Pedido encontrado, id_pedido: 205, elementos: 1
+[2025-06-01 09:37:48] detallePedido - id_pedido: 208, id_usuario: 44
+[2025-06-01 09:37:48] detallePedido - Pedido encontrado, id_pedido: 208, elementos: 1
+[2025-06-01 09:38:11] detallePedido - id_pedido: 208, id_usuario: 44
+[2025-06-01 09:38:11] detallePedido - Pedido encontrado, id_pedido: 208, elementos: 1
+[2025-06-01 09:39:57] detallePedido - id_pedido: 208, id_usuario: 44
+[2025-06-01 09:39:57] detallePedido - Pedido encontrado, id_pedido: 208, elementos: 1
+[2025-06-01 09:52:41] detallePedido - id_pedido: 0, id_usuario: 45
+[2025-06-01 09:52:41] detallePedido - Pedido no encontrado para id_pedido: 0, id_usuario: 45
+[2025-06-01 09:56:53] detallePedido - id_pedido: 211, id_usuario: 45
+[2025-06-01 09:56:53] detallePedido - Pedido encontrado, id_pedido: 211, elementos: 1
+[2025-06-02 04:23:08] detallePedido - id_pedido: 212, id_usuario: 46
+[2025-06-02 04:23:08] detallePedido - Pedido encontrado, id_pedido: 212, elementos: 3
+[2025-06-02 04:31:22] detallePedido - id_pedido: 0, id_usuario: 46
+[2025-06-02 04:31:22] detallePedido - Pedido no encontrado para id_pedido: 0, id_usuario: 46
+[2025-06-02 04:32:09] detallePedido - id_pedido: 0, id_usuario: 46
+[2025-06-02 04:32:09] detallePedido - Pedido no encontrado para id_pedido: 0, id_usuario: 46
+[2025-06-02 04:39:23] detallePedido - id_pedido: 0, id_usuario: 46
+[2025-06-02 04:39:23] detallePedido - Pedido no encontrado para id_pedido: 0, id_usuario: 46
+[2025-06-02 04:39:37] detallePedido - id_pedido: 0, id_usuario: 46
+[2025-06-02 04:39:37] detallePedido - Pedido no encontrado para id_pedido: 0, id_usuario: 46
+[2025-06-02 04:39:41] detallePedido - id_pedido: 0, id_usuario: 46
+[2025-06-02 04:39:41] detallePedido - Pedido no encontrado para id_pedido: 0, id_usuario: 46
+[2025-06-02 04:39:47] detallePedido - id_pedido: 0, id_usuario: 46
+[2025-06-02 04:39:47] detallePedido - Pedido no encontrado para id_pedido: 0, id_usuario: 46
+[2025-06-02 04:39:49] detallePedido - id_pedido: 0, id_usuario: 46
+[2025-06-02 04:39:49] detallePedido - Pedido no encontrado para id_pedido: 0, id_usuario: 46
+[2025-06-02 04:42:31] detallePedido - id_pedido: 0, id_usuario: 46
+[2025-06-02 04:42:31] detallePedido - Pedido no encontrado para id_pedido: 0, id_usuario: 46
+[2025-06-02 14:15:26] detallePedido - id_pedido: 0, id_usuario: 54
+[2025-06-02 14:15:26] detallePedido - Pedido no encontrado para id_pedido: 0, id_usuario: 54
+[2025-06-02 22:09:05] detallePedido - id_pedido: 214, id_usuario: 59
+[2025-06-02 22:09:05] detallePedido - Pedido encontrado, id_pedido: 214, elementos: 2
+[2025-06-02 22:11:01] detallePedido - id_pedido: 215, id_usuario: 59
+[2025-06-02 22:11:01] detallePedido - Pedido encontrado, id_pedido: 215, elementos: 2

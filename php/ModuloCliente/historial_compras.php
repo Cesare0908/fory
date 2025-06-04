@@ -7,6 +7,27 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../../css/DISEÑOSCLIENTE/pedidos.css?v=8">
+    <style>
+        .btn-cancelar {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 10px;
+        }
+        .btn-cancelar:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+        .btn-cancelar:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.3);
+        }
+    </style>
 </head>
 <body>
     <!-- Menú lateral -->
@@ -58,6 +79,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="http://localhost/fory-final/js/FuncionesCliente/historial_compras.js?v=8"></script>
+    <script src="http://localhost/fory-final/js/FuncionesCliente/historial_compras.js?v=85554"></script>
 </body>
 </html>

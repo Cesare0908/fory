@@ -12,6 +12,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 historialCompras.innerHTML = "";
                 if (data.success && data.pedidos.length > 0) {
                     data.pedidos.forEach(pedido => {
+                        const verDetalleButton = `
+                            <button class="btn btn-ver-detalle" data-id="${pedido.id_pedido}">
+                                <i class="fas fa-eye me-1"></i> Ver Detalle Pedido
+                            </button>
+                        `;
+
                         const card = document.createElement("div");
                         card.className = "card mb-3";
                         card.innerHTML = `
@@ -43,6 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         </li>
                                     `).join('')}
                                 </ul>
+                                ${verDetalleButton}
                             </div>
                         `;
                         historialCompras.appendChild(card);
@@ -71,6 +78,22 @@ document.addEventListener("DOMContentLoaded", function () {
                 icon.classList.add("fa-chevron-down");
                 btn.innerHTML = `<i class="fas fa-chevron-down"></i> Detalles`;
             }
+        }
+        // Handle view order details button click
+        if (e.target.classList.contains("btn-ver-detalle") || e.target.parentElement.classList.contains("btn-ver-detalle")) {
+            const btn = e.target.classList.contains("btn-ver-detalle") ? e.target : e.target.parentElement;
+            const idPedido = btn.dataset.id;
+
+            // Fetch order details again to get id_producto
+            fetch("../../controladores/ControladorCliente/controlador_pedidos.php?ope=listarHistorialCompras")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.pedidos) {
+                        const pedido = data.pedidos.find(p => p.id_pedido == idPedido);
+                        const idProducto = pedido?.detalles[0]?.id_producto || '';
+                        window.location.href = `http://localhost/fory-final/php/ModuloCliente/DetallePedido.php?id_producto=${idProducto}`;
+                    }
+                });
         }
     });
 

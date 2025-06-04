@@ -1,7 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Debes obtener estos valores de la sesión del usuario autenticado
-    const id_usuario = 3; // Simulado, debe venir de la sesión
-    const id_repartidor = 1; // Simulado, debe venir de la sesión
 
     // Configuración de Mapbox solo para ubicación
     mapboxgl.accessToken = 'TU_TOKEN_MAPBOX'; // Reemplaza con tu token de Mapbox

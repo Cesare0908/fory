@@ -2,7 +2,7 @@
 require '../../php/config.php';
 session_start(); 
 
-
+ 
 // Crear directorio para comprobantes si no existe
 $comprobantesDir = __DIR__ . '/../../comprobantes/';
 if (!is_dir($comprobantesDir)) {
@@ -194,7 +194,7 @@ if (isset($_GET['ope'])) {
                   AND p.id_producto IN (SELECT id_producto FROM producto_establecimiento WHERE id_establecimiento = 1)
                   AND p.stock > 0 AND p.disponibilidad = 'disponible'
                   ORDER BY RAND() 
-                  LIMIT 4";
+                  LIMIT 10";
         $stmt = $conexion->prepare($query);
         $stmt->bind_param("ii", $id_categoria, $id_producto);
         $stmt->execute();

@@ -1,0 +1,154 @@
+/* Importar fuente Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+body {
+    background-image: url('https://i.ibb.co/Kpn1Nvqd/image-Photoroom.jpg');
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.chat-box {
+    background: rgba(179, 216, 255, 0.9);
+    padding: 40px;
+    margin: 60px auto;
+    min-height: 700px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+    max-width: 600px;
+}
+
+.logo {
+    font-family: "Script MT";
+    font-size: 100px;
+    text-align: center;
+    color: #000000;
+    margin-bottom: 20px;
+}
+
+.header-title {
+    text-align: center;
+    margin-bottom: 40px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 2.5rem;
+    color: #181818;
+    font-weight: 700;
+}
+
+.chat-container {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.chat-messages {
+    height: 500px;
+    overflow-y: scroll;
+    padding: 10px;
+    border-radius: 10px;
+    background: #FFFFFF;
+    border: 1px solid #CED4DA;
+    margin-bottom: 20px;
+}
+
+.user-msg {
+    background: #0057B7;
+    color: #FFFFFF;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 10px;
+    text-align: right;
+    max-width: 80%;
+    float: right;
+    clear: both;
+    transition: all 0.3s ease;
+}
+
+.bot-msg {
+    background: #F8F9FA;
+    color: #181818;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 10px;
+    text-align: left;
+    max-width: 80%;
+    float: left;
+    clear: both;
+    transition: all 0.3s ease;
+}
+
+.chat-container .form-control {
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 12px;
+    border: 1px solid #CED4DA;
+    background: #FFFFFF;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.chat-container .form-control:focus {
+    border-color: rgb(136, 176, 219);
+    box-shadow: 0 0 8px rgba(89, 157, 230, 0.3);
+    outline: none;
+}
+
+.chat-container .form-control::placeholder {
+    color: #6C757D;
+}
+
+.chat-container .btn {
+    border-radius: 10px;
+    padding: 12px;
+    background: #0057B7;
+    border: none;
+    color: #FFFFFF;
+    font-size: 1.1rem;
+    font-weight: 700;
+    width: 100%;
+    transition: background 0.3s ease;
+}
+
+.chat-container .btn:hover {
+    background: #003087;
+}
+
+.footer {
+    background: #003087;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 15px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    font-size: 0.9rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+.footer .footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.footer p {
+    margin: 5px 0;
+}
+
+.footer strong {
+    color: #FFFFFF;
+    font-weight: 700;
+}
+
+@media (max-width: 767px) {
+    .chat-box {
+        padding: 20px;
+        margin: 30px auto;
+    }
+    .logo {
+        font-size: 80px;
+    }
+    .header-title {
+        font-size: 2rem;
+    }
+    .chat-container {
+        max-width: 100%;
+    }
+}

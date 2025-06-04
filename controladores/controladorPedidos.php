@@ -153,7 +153,6 @@ if (isset($_GET["ope1"])) {
         $conexion->close();
     }
 }
-
 // OBTENER PEDIDO
 if (isset($_POST['ope']) && $_POST['ope'] == 'buscarPedido') {
     $id_pedido = $_POST['id'];
@@ -165,7 +164,7 @@ if (isset($_POST['ope']) && $_POST['ope'] == 'buscarPedido') {
                      CONCAT(d.calle, ' ', d.numero, ', ', d.colonia, ', ', d.ciudad) AS direccion,
                      p.fecha_pedido, p.estado, p.total, p.tiempo_estimado, p.tiempo_real, 
                      p.notas, m.nombre_metodo AS metodo_pago, p.costo_envio,
-                     pg.telefono_confirmacion, pg.comprobante_pago
+                     pg.telefono_confirmacion, pg.comprobante
               FROM pedido p
               JOIN usuario u ON p.id_usuario = u.id_usuario
               LEFT JOIN repartidor rp ON p.id_repartidor = rp.id_repartidor
@@ -214,7 +213,7 @@ if (isset($_POST['ope']) && $_POST['ope'] == 'buscarPedido') {
             "metodo_pago" => $fila['metodo_pago'],
             "costo_envio" => $fila['costo_envio'],
             "telefono_confirmacion" => $fila['telefono_confirmacion'],
-            "comprobante_pago" => $fila['comprobante_pago'],
+            "comprobante" => $fila['comprobante'], // Corregido aquí también
             "detalles" => $detalles
         );
     } else {
@@ -229,7 +228,6 @@ if (isset($_POST['ope']) && $_POST['ope'] == 'buscarPedido') {
     $conexion->close();
     echo json_encode($datos);
 }
-
 // GUARDAR PEDIDO
 if (isset($_POST['ope']) && $_POST['ope'] == "guardarPedido") {
     $id_usuario = isset($_POST["id_usuario"]) ? intval($_POST["id_usuario"]) : 0;
@@ -414,7 +412,7 @@ if (isset($_POST['ope']) && $_POST['ope'] == "editarPedido") {
     $estado = isset($_POST["editarEstado"]) ? $_POST["editarEstado"] : '';
     $id_repartidor = isset($_POST["editarRepartidor"]) ? intval($_POST["editarRepartidor"]) : 0;
 
-    if (!in_array($estado, ['pendiente', 'enviado', 'entregado', 'cancelado'])) {
+    if (!in_array($estado, ['pendiente', 'proceso','camino', 'entregado', 'cancelado'])) {
         echo json_encode(["success" => false, "mensaje" => "Estado no válido."]);
         exit;
     }

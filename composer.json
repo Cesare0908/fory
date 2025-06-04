@@ -1,6 +1,6 @@
 {
     "require": {
-        "phpoffice/phpspreadsheet": "^3.4",
+        "phpoffice/phpspreadsheet": "^4.3",
         "mpdf/mpdf": "^8.2",
         "phpmailer/phpmailer": "^6.9",
         "guzzlehttp/guzzle": "^7.9"

@@ -1,7 +1,7 @@
 <?php
 require '../../php/config.php';
 
-header('Content-Type: application/json');
+header('Content-Type: application/json'); 
 
 function conectarBD() {
     return dbConectar();

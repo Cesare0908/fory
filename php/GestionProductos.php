@@ -21,9 +21,9 @@
                         <i class="fas fa-download me-2"></i>Exportar
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownExport">
-                        <li><a class="dropdown-item" href="http://localhost/fory/consultas/informePRODUCTOSPDF.php"><i class="fas fa-file-pdf me-2"></i>PDF</a></li>
-                        <li><a class="dropdown-item" href="http://localhost/fory/consultas/informePRODUCTOSXLS.php"><i class="fas fa-file-excel me-2"></i>Excel</a></li>
-                        <li><a class="dropdown-item" href="http://localhost/fory/consultas/informePRODUCTOSCSV.php"><i class="fas fa-file-csv me-2"></i>CSV</a></li>
+                        <li><a class="dropdown-item" href="http://localhost/fory-final/consultas/informePdfProductos.php"><i class="fas fa-file-pdf me-2"></i>PDF</a></li>
+                        <li><a class="dropdown-item" href="http://localhost/fory-final/consultas/informeExcelProductos.php"><i class="fas fa-file-excel me-2"></i>Excel</a></li>
+                        <li><a class="dropdown-item" href="http://localhost/fory-final/consultas/informecsvProductos.php"><i class="fas fa-file-csv me-2"></i>CSV</a></li>
                     </ul>
                 </div>
                 <button class="btn btn-custom" id="grafica"><i class="fas fa-chart-pie me-2"></i>Gráfica</button>
@@ -235,6 +235,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
-    <script src="../js/funcionesProducto.js?v=5"></script>
+    <script src="../js/funcionesProducto.js?v=33333"></script>
 </body>
 </html>

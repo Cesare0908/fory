@@ -6,9 +6,17 @@
     <title>Pedidos - FORY</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../../css/DISEÑOSCLIENTE/pedidos.css?v=8">
+    <link rel="stylesheet" href="http://localhost/fory-final/css/DISEÑOSCLIENTE/pedidos.css?v=334">
 </head>
 <body>
+    <!-- Botón flotante del chatbot con mensaje -->
+    <div class="chatbot-floating-container">
+        <span class="chatbot-help-message">¡Necesitas ayuda?</span>
+        <button class="chatbot-floating" data-bs-toggle="modal" data-bs-target="#chatbotModal">
+            <i class="fas fa-comment-dots"></i>
+        </button>
+    </div>
+
     <!-- Menú lateral -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -257,8 +265,33 @@
         </div>
     </div>
 
+    <!-- Modal del chatbot -->
+    <div class="modal fade chatbot-modal" id="chatbotModal" tabindex="-1" aria-labelledby="chatbotModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content chat-box">
+                <div class="modal-header">
+                    <h5 class="modal-title header-title" id="chatbotModalLabel">Chatbot de Fory</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chatContainer">
+                            <!-- Los mensajes se añadirán aquí dinámicamente -->
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" id="chatInput" class="form-control chat-input-message" placeholder="Escribe tu mensaje..." autocomplete="off">
+                            <input type="number" id="presupuestoInput" class="form-control chat-input-budget" placeholder="Presupuesto (opcional)" min="0" step="0.01">
+                            <button class="btn chat-input-btn" onclick="enviarMensaje()">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="../../js/FuncionesCliente/pedidos.js?v=13"></script>
+    <script src="http://localhost/fory-final/js/FuncionesCliente/pedidos.js?v=3433434"></script>
+    <script src="http://localhost/fory-final/js/FuncionesCliente/FuncionesChat.js?v=1577"></script>
 </body>
-</html>
+</html>  

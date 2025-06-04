@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     // Cargar categorías
-    fetch("../../controladores/ControladorCliente/controlador_pedidos.php?ope=listarCategorias")
+    fetch("http://localhost/fory-final/controladores/ControladorCliente/controlador_pedidos.php?ope=listarCategorias")
         .then(response => response.json())
         .then(data => { 
             if (data.success) {
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Cargar productos recomendados
     function cargarProductosRecomendados() {
-        fetch("../../controladores/ControladorCliente/controlador_pedidos.php?ope=listarProductosRecomendados")
+        fetch(" http://localhost/fory-final/controladores/ControladorCliente/controlador_pedidos.php?ope=listarProductosRecomendados")
             .then(response => response.json())
             .then(data => {
                 productosRecomendados.innerHTML = "";
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Cargar productos relacionados
     function cargarProductosRelacionados(idProducto, idCategoria) {
-        fetch(`../../controladores/ControladorCliente/controlador_pedidos.php?ope=listarProductosRelacionados&id_categoria=${idCategoria}&id_producto=${idProducto}`)
+        fetch(`http://localhost/fory-final/controladores/ControladorCliente/controlador_pedidos.php?ope=listarProductosRelacionados&id_categoria=${idCategoria}&id_producto=${idProducto}`)
             .then(response => response.json())
             .then(data => {
                 productosRelacionados.innerHTML = "";
@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Cargar productos más vendidos
     function cargarProductosMasVendidos() {
-        fetch("../../controladores/ControladorCliente/controlador_pedidos.php?ope=listarProductosMasVendidos")
+        fetch("http://localhost/fory-final/controladores/ControladorCliente/controlador_pedidos.php?ope=listarProductosMasVendidos")
             .then(response => response.json())
             .then(data => {
                 productosMasVendidos.innerHTML = "";
@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Cargar direcciones
     function cargarDirecciones() {
         direccionSelect.innerHTML = '<option value="">Selecciona una dirección</option>';
-        fetch("../../controladores/ControladorCliente/controlador_pedidos.php?ope=listarDirecciones")
+        fetch("http://localhost/fory-final/controladores/ControladorCliente/controlador_pedidos.php?ope=listarDirecciones")
             .then(response => response.json())
             .then(data => {
                 if (data.success && data.direcciones.length > 0) {
@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Cargar métodos de pago
-    fetch("../../controladores/ControladorCliente/controlador_pedidos.php?ope=listarMetodosPago")
+    fetch("http://localhost/fory-final/controladores/ControladorCliente/controlador_pedidos.php?ope=listarMetodosPago")
         .then(response => response.json())
         .then(data => {
             if (data.success && data.metodos.length > 0) {
@@ -231,7 +231,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Cargar productos
     function cargarProductos(idCategoria = 0, busqueda = "") {
-        let url = `../../controladores/ControladorCliente/controlador_pedidos.php?ope=listarProductos`;
+        let url = `http://localhost/fory-final/controladores/ControladorCliente/controlador_pedidos.php?ope=listarProductos`;
         if (idCategoria > 0) url += `&id_categoria=${idCategoria}`;
         if (busqueda) url += `&busqueda=${encodeURIComponent(busqueda)}`;
 
@@ -356,7 +356,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             actualizarCarrito();
             // Cargar productos relacionados después de agregar al carrito
-            fetch(`../../controladores/ControladorCliente/controlador_pedidos.php?ope=obtenerProducto&id_producto=${id}`)
+            fetch(`http://localhost/fory-final/controladores/ControladorCliente/controlador_pedidos.php?ope=obtenerProducto&id_producto=${id}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -525,7 +525,7 @@ document.addEventListener("DOMContentLoaded", function () {
         formData.append("codigo_postal", document.getElementById("codigo_postal").value);
         formData.append("referencias", document.getElementById("referencias").value);
 
-        fetch("../../controladores/ControladorCliente/controlador_pedidos.php", {
+        fetch("http://localhost/fory-final/controladores/ControladorCliente/controlador_pedidos.php", {
             method: "POST",
             body: formData
         })
@@ -652,23 +652,23 @@ document.addEventListener("DOMContentLoaded", function () {
             formData.append("comprobante_pago", document.getElementById("comprobante-pago").files[0]);
         }
 
-        fetch("../../controladores/ControladorCliente/controlador_pedidos.php", {
+        fetch("http://localhost/fory-final/controladores/ControladorCliente/controlador_pedidos.php", {
             method: "POST",
             body: formData
         })
             .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Pedido Realizado",
-                        text: data.mensaje
-                    }).then(() => {
-                        carrito = [];
-                        actualizarCarrito();
-                        bootstrap.Modal.getInstance(document.getElementById("modal-pago")).hide();
-                        window.location.href = `../../php/ModuloCliente/cliente.php?pedido=${data.id_pedido}`;
-                    });
+.then(data => {
+    if (data.success) {
+        Swal.fire({ 
+            icon: "success",
+            title: "Pedido Realizado",
+            text: "Tu pedido ha sido realizado exitosamente. Puedes ver los detalles en tu perfil (HISTORIAL)."
+        }).then(() => {
+            carrito = [];
+            actualizarCarrito();
+            bootstrap.Modal.getInstance(document.getElementById("modal-pago")).hide();
+            window.location.href = `http://localhost/fory-final/php/ModuloCliente/DetallePedido.php?id_pedido=${data.id_pedido}`;
+        });
                 } else {
                     Swal.fire({
                         icon: "error",

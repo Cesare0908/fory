@@ -24,7 +24,7 @@
             <li><a href="#" onclick="mostrarSeccion('ubicacion')"><i class="fas fa-map-marker-alt"></i> Actualizar Ubicación</a></li>
             <li><a href="#" onclick="mostrarSeccion('notificaciones')"><i class="fas fa-bell"></i> Notificaciones</a></li>
             <li><a href="#" onclick="mostrarSeccion('incidencia')"><i class="fas fa-exclamation-circle"></i> Reportar Incidencia</a></li>
-            <li><a href="cerrar_sesion.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+            <li><a href="http://localhost/fory-final/php/salir.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
         </ul>
     </div>
     <div class="main-content">
@@ -280,6 +280,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.2/dist/sweetalert2.min.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js"></script>
-    <script src="http://localhost/fory-final/JS/FuncionesRep/funcionesRep.js"></script>
+    <script src="http://localhost/fory-final/JS/FuncionesRep/funcionesRep.js?ver=6"></script>
 </body>
 </html>

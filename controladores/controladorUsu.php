@@ -12,9 +12,9 @@ if (isset($_GET["ope1"])) {
         $query = "SELECT u.id_usuario, u.nombre, u.ap_paterno, u.ap_materno, u.correo, u.telefono, r.tipo_rol, u.id_rol
                   FROM usuario u
                   JOIN rol r ON u.id_rol = r.id_rol
-                  WHERE u.id_rol IN (4)"; // Solo Administrador (1) y Cliente (4)
+                  WHERE u.id_rol IN (4, 2)"; // Solo Administrador (1) y Cliente (4)
         $re = $conexion->query($query);
-        $i = 0;
+        $i = 0; 
         $filas = array();
         
         while ($fila = $re->fetch_array(MYSQLI_ASSOC)) {
@@ -44,7 +44,7 @@ if (isset($_GET["ope1"])) {
     // Lista de roles
     elseif ($ope == "ListaRoles") {
         $conexion = dbConectar();
-        $query = "SELECT id_rol, tipo_rol FROM rol WHERE id_rol IN (1, 4)"; // Solo Administrador (1) y Cliente (4)
+        $query = "SELECT id_rol, tipo_rol FROM rol WHERE id_rol IN (1, 2, 4)"; // Solo Administrador (1) y Cliente (4)
         $re = $conexion->query($query);
         $roles = array();
         
@@ -108,7 +108,7 @@ if (isset($_POST['ope']) && $_POST['ope'] == 'buscarUsuario') {
     $query = "SELECT u.id_usuario, u.nombre, u.ap_paterno, u.ap_materno, u.correo, u.telefono, u.id_rol, r.tipo_rol 
               FROM usuario u 
               JOIN rol r ON u.id_rol = r.id_rol
-              WHERE u.id_usuario = ? AND u.id_rol IN (1, 4)";
+              WHERE u.id_usuario = ? AND u.id_rol IN (1, 4, 2)";
     $stmt = $conexion->prepare($query);
     $stmt->bind_param("i", $id_usuario);
     $stmt->execute();
@@ -149,7 +149,7 @@ if (isset($_POST['ope']) && $_POST['ope'] == "editarUSU") {
     $id_rol = $_POST["editarRol"];
 
     // Validar que el rol sea permitido
-    if (!in_array($id_rol, [1, 4])) {
+    if (!in_array($id_rol, [1, 4, 2])) {
         echo json_encode(["error" => 0, "mensaje" => "Rol no permitido."]);
         exit;
     }
@@ -188,7 +188,7 @@ if (isset($_POST['ope']) && $_POST['ope'] == "guardarUSU") {
     $id_rol = $_POST["id_rol"];
 
     // Validar que el rol sea permitido
-    if (!in_array($id_rol, [1, 4])) {
+    if (!in_array($id_rol, [1, 4, 2])) {
         echo json_encode(["success" => false, "mensaje" => "Rol no permitido."]);
         exit;
     }

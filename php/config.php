@@ -1,5 +1,18 @@
 <?php
+// Conexión PDO
+$host = '127.0.0.1';
+$dbname = 'fory';
+$user = 'root'; // Cambia si tu usuario de MySQL es diferente
+$pass = ''; // Cambia si tienes contraseña
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Error de conexión PDO: " . $e->getMessage());
+}
+
 define("RUTA", "/FORY-FINAL");
+define('URL_BASE', 'http://localhost/FORY-FINAL/');
 
 function dbConectar()
 {
@@ -15,7 +28,7 @@ function dbConectar()
         return mysqli_connect_error();
     }
     return $conexion;
-}
+} 
 
 class Usuarios
 {
@@ -42,9 +55,9 @@ class Usuarios
                 $_SESSION["correo"] = $correo;
                 $_SESSION["nombre"] = "{$usuario['nombre']} {$usuario['ap_paterno']} {$usuario['ap_materno']}";
                 $_SESSION["rol"] = $usuario['id_rol'];
+                $_SESSION["id_usuario"] = $usuario['id_usuario']; // Agregar id_usuario
                 $_SESSION["LAST_ACTIVITY"] = time();
 
-                // Retornamos el id_rol
                 return array(true, $usuario['id_rol']);
             } else {
                 session_unset();
@@ -77,17 +90,16 @@ function enviarCorreo($correoDestino, $nombre, $titulo, $mensaje) {
     $correo = new PHPMailer(true);
 
     try {
-        $correo->SMTPDebug = 0; // Cambia a 2 si quieres ver el proceso SMTP
+        $correo->SMTPDebug = 0;
         $correo->isSMTP();
         $correo->Host = 'smtp.gmail.com';
         $correo->SMTPAuth = true;
-        $correo->Username = 'crkendok@gmail.com'; // Tu correo
-        $correo->Password = 'dgmr fmrl rgkq bxsx'; // Contraseña de app
+        $correo->Username = 'crkendok@gmail.com';
+        $correo->Password = 'dgmr fmrl rgkq bxsx';
         $correo->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $correo->Port = 465;
         $correo->CharSet = 'UTF-8';
 
-        // ⚠️ DESACTIVAMOS VERIFICACIÓN SSL (sólo para desarrollo)
         $correo->SMTPOptions = [
             'ssl' => [
                 'verify_peer' => false,
@@ -96,7 +108,7 @@ function enviarCorreo($correoDestino, $nombre, $titulo, $mensaje) {
             ]
         ];
 
-        $correo->setFrom('crkendok@gmail.com', $nombre); 
+        $correo->setFrom('crkendok@gmail.com', $nombre);
         $correo->addAddress($correoDestino);
         $correo->isHTML(true);
         $correo->Subject = $titulo;
@@ -109,6 +121,4 @@ function enviarCorreo($correoDestino, $nombre, $titulo, $mensaje) {
         return ['success' => false, 'mensaje' => $correo->ErrorInfo];
     }
 }
-
-
 ?>
